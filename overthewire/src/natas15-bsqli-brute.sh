@@ -41,7 +41,6 @@ function brute_force(){
 
 function main(){
     enum_alphabet_parallel
-    echo "eeee"
     brute_force
 }
 
