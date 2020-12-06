@@ -2,7 +2,7 @@
 
 SECONDS=0
 
-$null > alfabeto
+$null > alphabet
 $null > current_byte
 
 export PASSWORD=""
@@ -24,11 +24,11 @@ function brute_force_byte(){
 }
 
 function enum_alphabet_parallel(){
-    for letter in {A..Z} {a..z} {0..9}; do echo -e "%25\n$letter\nalfabeto"; done | parallel --max-args=3 brute_force_byte
+    for letter in {A..Z} {a..z} {0..9}; do echo -e "%25\n$letter\nalphabet"; done | parallel --max-args=3 brute_force_byte
 }
 
 function brute_force_byte_parallel(){
-    for letter in `cat alfabeto`; do echo -e "$PASSWORD\n$letter\ncurrent_byte"; done | parallel --max-args=3 brute_force_byte 
+    for letter in `cat alphabet`; do echo -e "$PASSWORD\n$letter\ncurrent_byte"; done | parallel --max-args=3 brute_force_byte 
 }
 
 function brute_force(){
